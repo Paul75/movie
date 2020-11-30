@@ -12,7 +12,14 @@ func main() {
 }
 
 func initRoutes(r *gin.Engine, db *MokeDB) {
-	r.GET("/movies", func(c *gin.Context) {
-		c.JSON(200, db.Movies)
-	})
+	sm := ServiceMovie{db}
+	r.GET("/movies", sm.Get)
+}
+
+type ServiceMovie struct {
+	db *MokeDB
+}
+
+func (sm *ServiceMovie) Get(ctx *gin.Context) {
+	ctx.JSON(200, sm.db.Movies)
 }
