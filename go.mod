@@ -1,4 +1,4 @@
-module github.com/dgkg/movie
+module movie
 
 go 1.15
 
