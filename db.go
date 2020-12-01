@@ -58,5 +58,42 @@ func (db *MokeDB) UpdateUser(uuid string, data map[string]interface{}) (*User, e
 	if v, ok := data["password"]; ok {
 		u.Password = v.(string)
 	}
-	return nil, nil
+	return u, nil
+}
+
+func (db *MokeDB) AddActor(u *Actor) (*Actor, error) {
+	db.Actors[u.ID] = u
+	return u, nil
+}
+
+func (db *MokeDB) DeleteActor(uuid string) error {
+	delete(db.Actors, uuid)
+	return nil
+}
+
+func (db *MokeDB) GetActors() (map[string]*Actor, error) {
+	return db.Actors, nil
+}
+
+func (db *MokeDB) GetActorByUUID(uuid string) (*Actor, error) {
+	return db.Actors[uuid], nil
+}
+
+func (db *MokeDB) UpdateActor(uuid string, data map[string]interface{}) (*Actor, error) {
+	a, err := db.GetActorByUUID(uuid)
+	if err != nil {
+		return nil, err
+	}
+
+	if v, ok := data["first_name"]; ok {
+		a.FirstName = v.(string)
+	}
+	if v, ok := data["last_name"]; ok {
+		a.LastName = v.(string)
+	}
+	if v, ok := data["biography"]; ok {
+		a.Biography = v.(string)
+	}
+
+	return a, nil
 }

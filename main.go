@@ -24,6 +24,74 @@ func initRoutes(r *gin.Engine, db *MokeDB) {
 	r.GET("/users/:uuid", su.GetByUUID)
 	r.DELETE("/users/:uuid", su.Delete)
 	r.PATCH("/users/:uuid", su.Update)
+	// service Actor
+	sa := ServiceActor{db}
+	r.POST("/actors", sa.Post)
+	r.GET("/actors", sa.Get)
+	r.GET("/actors/:uuid", sa.GetByUUID)
+	r.DELETE("/actors/:uuid", sa.Delete)
+	r.PATCH("/actors/:uuid", sa.Update)
+}
+
+type ServiceActor struct {
+	db *MokeDB
+}
+
+func (su *ServiceActor) Get(ctx *gin.Context) {
+	us, err := su.db.GetUsers()
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	ctx.JSON(http.StatusOK, us)
+}
+
+func (su *ServiceActor) GetByUUID(ctx *gin.Context) {
+	uuid := ctx.Param("uuid")
+	u, err := su.db.GetUserByUUID(uuid)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	ctx.JSON(http.StatusOK, u)
+}
+
+func (su *ServiceActor) Post(ctx *gin.Context) {
+	var u User
+	if err := ctx.BindJSON(&u); err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	user := NewUser(u.FirstName, u.LastName, u.Email, u.Password)
+	_, err := su.db.AddUser(user)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	ctx.JSON(http.StatusOK, user)
+}
+
+func (su *ServiceActor) Delete(ctx *gin.Context) {
+	err := su.db.DeleteUser(ctx.Param("uuid"))
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	ctx.JSON(http.StatusOK, nil)
+}
+
+func (su *ServiceActor) Update(ctx *gin.Context) {
+	data := make(map[string]interface{})
+	if err := ctx.BindJSON(data); err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	u, err := su.db.UpdateUser(ctx.Param("uuid"), data)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	ctx.JSON(http.StatusOK, u)
 }
 
 type ServiceUser struct {

@@ -45,10 +45,10 @@ func NewMovie(title, desc string, create time.Time) *Movie {
 }
 
 type Actor struct {
-	ID        string
-	FirstName string
-	LastName  string
-	Biography string
+	ID        string `json:"id"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Biography string `json:"biography"`
 }
 
 type MediaKind int
