@@ -39,5 +39,8 @@ type DBActors interface {
 type DBMovies interface {
 	// Movies
 	AddMovie(u *model.Movie) (*model.Movie, error)
+	DeleteMovie(uuid string) error
 	GetMovies() (map[string]*model.Movie, error)
+	GetMovieByUUID(uuid string) (*model.Movie, error)
+	UpdateMovie(uuid string, data map[string]interface{}) (*model.Movie, error)
 }

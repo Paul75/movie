@@ -35,3 +35,36 @@ func (sm *ServiceMovie) Post(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, newMovie)
 }
+
+func (su *ServiceMovie) GetByUUID(ctx *gin.Context) {
+	uuid := ctx.Param("uuid")
+	m, err := su.db.GetMovieByUUID(uuid)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	ctx.JSON(http.StatusOK, m)
+}
+
+func (su *ServiceMovie) Delete(ctx *gin.Context) {
+	err := su.db.DeleteMovie(ctx.Param("uuid"))
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	ctx.JSON(http.StatusOK, nil)
+}
+
+func (su *ServiceMovie) Update(ctx *gin.Context) {
+	data := make(map[string]interface{})
+	if err := ctx.BindJSON(&data); err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	u, err := su.db.UpdateMovie(ctx.Param("uuid"), data)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	ctx.JSON(http.StatusOK, u)
+}

@@ -3,14 +3,14 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 
-	"movie/db/sqlite"
+	"movie/db/moke"
 	"movie/service"
 )
 
 func main() {
 	r := gin.Default()
-	//db := moke.NewMokeDB()
-	db := sqlite.New()
+	db := moke.NewMokeDB()
+	//db := sqlite.New()
 	service.InitRoutes(r, db)
 	r.Run()
 }

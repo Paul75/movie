@@ -57,7 +57,7 @@ func (su *ServiceActor) Delete(ctx *gin.Context) {
 
 func (su *ServiceActor) Update(ctx *gin.Context) {
 	data := make(map[string]interface{})
-	if err := ctx.BindJSON(data); err != nil {
+	if err := ctx.BindJSON(&data); err != nil {
 		ctx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
