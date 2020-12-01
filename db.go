@@ -21,3 +21,42 @@ func NewMokeDB() *MokeDB {
 
 	return &db
 }
+
+func (db *MokeDB) AddUser(u *User) (*User, error) {
+	db.Users[u.ID] = u
+	return u, nil
+}
+
+func (db *MokeDB) DeleteUser(uuid string) error {
+	delete(db.Users, uuid)
+	return nil
+}
+
+func (db *MokeDB) GetUsers() (map[string]*User, error) {
+	return db.Users, nil
+}
+
+func (db *MokeDB) GetUserByUUID(uuid string) (*User, error) {
+	return db.Users[uuid], nil
+}
+
+func (db *MokeDB) UpdateUser(uuid string, data map[string]interface{}) (*User, error) {
+	u, err := db.GetUserByUUID(uuid)
+	if err != nil {
+		return nil, err
+	}
+
+	if v, ok := data["first_name"]; ok {
+		u.FirstName = v.(string)
+	}
+	if v, ok := data["last_name"]; ok {
+		u.LastName = v.(string)
+	}
+	if v, ok := data["email"]; ok {
+		u.Email = v.(string)
+	}
+	if v, ok := data["password"]; ok {
+		u.Password = v.(string)
+	}
+	return nil, nil
+}
