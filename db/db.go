@@ -4,6 +4,7 @@ import "movie/model"
 
 type DB interface {
 	DBUsers
+	DBMedias
 	DBActors
 	DBMovies
 }
@@ -15,6 +16,15 @@ type DBUsers interface {
 	GetUsers() (map[string]*model.User, error)
 	GetUserByUUID(uuid string) (*model.User, error)
 	UpdateUser(uuid string, data map[string]interface{}) (*model.User, error)
+}
+
+type DBMedias interface {
+	// Medias
+	AddMedia(u *model.Media) (*model.Media, error)
+	DeleteMedia(uuid string) error
+	GetMedias() (map[string]*model.Media, error)
+	GetMediaByUUID(uuid string) (*model.Media, error)
+	UpdateMedia(uuid string, data map[string]interface{}) (*model.Media, error)
 }
 
 type DBActors interface {

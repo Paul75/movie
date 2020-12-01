@@ -3,6 +3,8 @@ package model
 import (
 	"encoding/json"
 	"strings"
+
+	"github.com/google/uuid"
 )
 
 type MediaKind int
@@ -12,15 +14,21 @@ func (m *MediaKind) UnmarshalJSON(b []byte) error {
 	if err := json.Unmarshal(b, &s); err != nil {
 		return err
 	}
-	switch strings.ToLower(s) {
-	default:
-		*m = MediaDefault
-	case "pic":
-		*m = MediaPic
-	case "movie":
-		*m = MediaMovie
-	}
+	*m = MediaKindType(s)
 	return nil
+}
+
+func MediaKindType(str string) MediaKind {
+	var m MediaKind
+	switch strings.ToLower(str) {
+	default:
+		m = MediaDefault
+	case "pic":
+		m = MediaPic
+	case "movie":
+		m = MediaMovie
+	}
+	return m
 }
 
 func (m MediaKind) MarshalJSON() ([]byte, error) {
@@ -47,4 +55,13 @@ type Media struct {
 	Title string    `json:"title"`
 	URI   string    `json:"uri"`
 	Kind  MediaKind `json:"kind"`
+}
+
+func NewMedia(title, uri string, kind MediaKind) *Media {
+	return &Media{
+		ID:    uuid.New().String(),
+		Title: title,
+		URI:   uri,
+		Kind:  kind,
+	}
 }
