@@ -2,10 +2,10 @@ package service
 
 import (
 	"movie/db"
+	"movie/middleware"
 	"movie/model"
 	"net/http"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
@@ -92,29 +92,11 @@ func (su *ServiceUser) Login(ctx *gin.Context) {
 		return
 	}
 
-	type MyCustomClaims struct {
-		ID    string `json:"id"`
-		Email string `json:"email"`
-		jwt.StandardClaims
-	}
-
-	// Create the Claims
-	claims := MyCustomClaims{
-		u.ID,
-		u.Email,
-		jwt.StandardClaims{
-			ExpiresAt: 15000,
-			Issuer:    "movie API",
-		},
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	mySigningKey := []byte("AllYourBase")
-	jwtValue, err := token.SignedString(mySigningKey)
+	jwtValue, err := middleware.GetJWT(u.ID, u.Email)
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
+
 	ctx.JSON(http.StatusOK, gin.H{"jwt": jwtValue})
 }

@@ -2,17 +2,20 @@ package service
 
 import (
 	"movie/db"
+	"movie/middleware"
 
 	"github.com/gin-gonic/gin"
 )
 
 func InitRoutes(r *gin.Engine, db db.DB) {
 	sm := ServiceMovie{db}
-	r.GET("/movies", sm.Get)
-	r.POST("/movies", sm.Post)
-	r.GET("/movies/:uuid", sm.GetByUUID)
-	r.DELETE("/movies/:uuid", sm.Delete)
-	r.PATCH("/movies/:uuid", sm.Update)
+	moviesPath := r.Group("/movies")
+	moviesPath.Use(middleware.JWT("AllYourBase"))
+	moviesPath.GET("", sm.Get)
+	moviesPath.POST("", sm.Post)
+	moviesPath.GET("/:uuid", sm.GetByUUID)
+	moviesPath.DELETE("/:uuid", sm.Delete)
+	moviesPath.PATCH("/:uuid", sm.Update)
 	// service User
 	su := ServiceUser{db}
 	r.POST("/users", su.Post)
