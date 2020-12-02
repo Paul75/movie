@@ -10,7 +10,7 @@ import (
 func InitRoutes(r *gin.Engine, db db.DB) {
 	sm := ServiceMovie{db}
 	moviesPath := r.Group("/movies")
-	moviesPath.Use(middleware.JWT("AllYourBase"))
+	moviesPath.Use(middleware.JWT())
 	moviesPath.GET("", sm.Get)
 	moviesPath.POST("", sm.Post)
 	moviesPath.GET("/:uuid", sm.GetByUUID)

@@ -11,9 +11,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var mySigningKey = []byte("AllYourBase")
+var MySigningKey []byte
 
-func JWT(secret string) gin.HandlerFunc {
+func JWT() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		val := ctx.Request.Header.Get("Authorization")
 		if len(val) == 0 || !strings.Contains(val, "Bearer ") {
@@ -28,15 +28,7 @@ func JWT(secret string) gin.HandlerFunc {
 			return
 		}
 
-		token, err := jwt.Parse(vals[1], func(token *jwt.Token) (interface{}, error) {
-			// Don't forget to validate the alg is what you expect:
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-			}
-
-			// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
-			return []byte(secret), nil
-		})
+		token, err := jwt.Parse(vals[1], validateJWT)
 
 		if err != nil {
 			log.Println("error parsing JWT", err)
@@ -48,6 +40,15 @@ func JWT(secret string) gin.HandlerFunc {
 			fmt.Println(claims.ID, claims.Email)
 		}
 	}
+}
+
+func validateJWT(token *jwt.Token) (interface{}, error) {
+	log.Println("try to pars the JWT")
+	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+		log.Println("error parsing JWT")
+		return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+	}
+	return MySigningKey, nil
 }
 
 type MyCustomClaims struct {
@@ -69,7 +70,7 @@ func GetJWT(id, email string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	jwtValue, err := token.SignedString(mySigningKey)
+	jwtValue, err := token.SignedString(MySigningKey)
 	if err != nil {
 		return "", err
 	}
