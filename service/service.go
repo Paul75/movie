@@ -20,6 +20,7 @@ func InitRoutes(r *gin.Engine, db db.DB) {
 	r.GET("/users/:uuid", su.GetByUUID)
 	r.DELETE("/users/:uuid", su.Delete)
 	r.PATCH("/users/:uuid", su.Update)
+	r.POST("/login", su.Login)
 	// service Actor
 	sa := ServiceActor{db}
 	r.POST("/actors", sa.Post)

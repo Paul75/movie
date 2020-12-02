@@ -42,13 +42,15 @@ func (u *User) UnmarshalJSON(b []byte) error {
 	u.FirstName = aux.FirstName
 	u.LastName = aux.LastName
 	u.Email = aux.Email
-	u.Password = aux.Password
-
-	h := sha256.New()
-	h.Write([]byte(u.Password))
-	u.Password = fmt.Sprintf("%x", h.Sum(nil))
+	u.Password = HashPass(aux.Password)
 
 	return nil
+}
+
+func HashPass(pass string) string {
+	h := sha256.New()
+	h.Write([]byte(pass))
+	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
 func (u User) MarshalJSON() ([]byte, error) {

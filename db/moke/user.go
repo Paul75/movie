@@ -1,6 +1,9 @@
 package moke
 
-import "movie/model"
+import (
+	"errors"
+	"movie/model"
+)
 
 func (db *MokeDB) AddUser(u *model.User) (*model.User, error) {
 	db.Users[u.ID] = u
@@ -18,6 +21,15 @@ func (db *MokeDB) GetUsers() (map[string]*model.User, error) {
 
 func (db *MokeDB) GetUserByUUID(uuid string) (*model.User, error) {
 	return db.Users[uuid], nil
+}
+
+func (db *MokeDB) GetUserByEmail(email string) (*model.User, error) {
+	for _, u := range db.Users {
+		if u.Email == email {
+			return u, nil
+		}
+	}
+	return nil, errors.New("not found")
 }
 
 func (db *MokeDB) UpdateUser(uuid string, data map[string]interface{}) (*model.User, error) {

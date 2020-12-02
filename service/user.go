@@ -5,6 +5,7 @@ import (
 	"movie/model"
 	"net/http"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
@@ -67,4 +68,53 @@ func (su *ServiceUser) Update(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, u)
+}
+
+type LoginPayload struct {
+	Login string `json:"login"`
+	Pass  string `json:"pass"`
+}
+
+func (su *ServiceUser) Login(ctx *gin.Context) {
+	var payload LoginPayload
+	if err := ctx.BindJSON(&payload); err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	u, err := su.db.GetUserByEmail(payload.Login)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	if u.Password != model.HashPass(payload.Pass) {
+		ctx.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	type MyCustomClaims struct {
+		ID    string `json:"id"`
+		Email string `json:"email"`
+		jwt.StandardClaims
+	}
+
+	// Create the Claims
+	claims := MyCustomClaims{
+		u.ID,
+		u.Email,
+		jwt.StandardClaims{
+			ExpiresAt: 15000,
+			Issuer:    "movie API",
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	mySigningKey := []byte("AllYourBase")
+	jwtValue, err := token.SignedString(mySigningKey)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"jwt": jwtValue})
 }

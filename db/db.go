@@ -15,6 +15,7 @@ type DBUsers interface {
 	DeleteUser(uuid string) error
 	GetUsers() (map[string]*model.User, error)
 	GetUserByUUID(uuid string) (*model.User, error)
+	GetUserByEmail(email string) (*model.User, error)
 	UpdateUser(uuid string, data map[string]interface{}) (*model.User, error)
 }
 
