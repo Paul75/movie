@@ -1,0 +1,351 @@
+{
+	"info": {
+		"_postman_id": "f246a60b-cd63-4706-8f78-f37a72a63689",
+		"name": "movie API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "movies",
+			"item": [
+				{
+					"name": "all movies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_base}}/movies",
+							"host": [
+								"{{url_base}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "movie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9cf04a25-225b-4db9-91bd-d572b7120415",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_base}}/movies/{{uuid_movie}}",
+							"host": [
+								"{{url_base}}"
+							],
+							"path": [
+								"movies",
+								"{{uuid_movie}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "movie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a1aae3c9-694d-4c79-b269-7a5da07e37f7",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Set movie_uuid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"uuid_movie\",jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_cession}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\":\"Star Wars 3\",\n    \"desc\":\"other desc\",\n    \"creation_date\":\"2021-11-30T15:50:47.92186+01:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_base}}/movies",
+							"host": [
+								"{{url_base}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "movie",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url_base}}/movies/{{uuid_movie}}",
+							"host": [
+								"{{url_base}}"
+							],
+							"path": [
+								"movies",
+								"{{uuid_movie}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "movie",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Star Wars 4\",\n    \"desc\": \"New description\",\n    \"creation_date\": \"2021-12-30T15:50:47.92186+01:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_base}}/movies/{{uuid_movie}}",
+							"host": [
+								"{{url_base}}"
+							],
+							"path": [
+								"movies",
+								"{{uuid_movie}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_base}}/users",
+							"host": [
+								"{{url_base}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6ffbca6c-baf4-4fbb-8adb-305ef597f860",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_base}}/users/{{uuid_user}}",
+							"host": [
+								"{{url_base}}"
+							],
+							"path": [
+								"users",
+								"{{uuid_user}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1b991c9e-ef91-4f8b-99de-e072972c0b25",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Set movie_uuid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"uuid_user\",jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\":\"Robert\",\n    \"last_name\":\"Pick\",\n    \"email\":\"rob@pik.com\",\n    \"password\":\"this-is-my-pass-123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_base}}/users",
+							"host": [
+								"{{url_base}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url_base}}/users/{{uuid_user}}",
+							"host": [
+								"{{url_base}}"
+							],
+							"path": [
+								"users",
+								"{{uuid_user}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\":\"Jhon\",\n    \"last_name\":\"Travolta\",\n    \"email\":\"j@travolta.com\",\n    \"password\":\"anotherpass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_base}}/users/{{uuid_user}}",
+							"host": [
+								"{{url_base}}"
+							],
+							"path": [
+								"users",
+								"{{uuid_user}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bf10eb66-f214-4ce2-8617-8dbdebf9a3d1",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Set movie_uuid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"jwt_cession\",jsonData.jwt);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\":\"rob@pik.com\",\n    \"pass\":\"this-is-my-pass-123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_base}}/login",
+							"host": [
+								"{{url_base}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
