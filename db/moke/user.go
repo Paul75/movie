@@ -35,8 +35,6 @@ func (db *MokeDB) UpdateUser(uuid string, data map[string]interface{}) (*model.U
 	if v, ok := data["email"]; ok {
 		u.Email = v.(string)
 	}
-	if v, ok := data["password"]; ok {
-		u.Password = v.(string)
-	}
+
 	return u, nil
 }
