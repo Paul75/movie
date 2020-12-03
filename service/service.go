@@ -1,13 +1,14 @@
 package service
 
 import (
+	"movie/cache"
 	"movie/db"
 	"movie/middleware"
 
 	"github.com/gin-gonic/gin"
 )
 
-func InitRoutes(r *gin.Engine, db db.DB) {
+func InitRoutes(r *gin.Engine, db db.DB, cache cache.CacheDB) {
 	sm := ServiceMovie{db}
 	moviesPath := r.Group("/movies")
 	moviesPath.Use(middleware.JWT())
@@ -17,9 +18,13 @@ func InitRoutes(r *gin.Engine, db db.DB) {
 	moviesPath.DELETE("/:uuid", sm.Delete)
 	moviesPath.PATCH("/:uuid", sm.Update)
 	// service User
-	su := ServiceUser{db}
+	su := ServiceUser{
+		db:    db,
+		cache: cache,
+	}
+
 	r.POST("/users", su.Post)
-	r.GET("/users", su.Get)
+	r.GET("/users", middleware.Cache(cache), su.Get)
 	r.GET("/users/:uuid", su.GetByUUID)
 	r.DELETE("/users/:uuid", su.Delete)
 	r.PATCH("/users/:uuid", su.Update)

@@ -1,1 +1,4 @@
 MySigningKey: "ASKDFJNTvjsnvsnsls"
+redis:
+  dns: "localhost:6379"
+  exp: 200

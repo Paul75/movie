@@ -1,6 +1,8 @@
 package service
 
 import (
+	"encoding/json"
+	"movie/cache"
 	"movie/db"
 	"movie/middleware"
 	"movie/model"
@@ -10,7 +12,8 @@ import (
 )
 
 type ServiceUser struct {
-	db db.DB
+	db    db.DB
+	cache cache.CacheDB
 }
 
 func (su *ServiceUser) Get(ctx *gin.Context) {
@@ -19,6 +22,8 @@ func (su *ServiceUser) Get(ctx *gin.Context) {
 		ctx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
+	datacache, _ := json.Marshal(us)
+	su.cache.Set(ctx.Request.URL.String(), string(datacache))
 	ctx.JSON(http.StatusOK, us)
 }
 
