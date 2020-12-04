@@ -24,7 +24,7 @@ func NewRedisDB(dns string, exp int) *RedisDB {
 		DB:       0,  // use default DB
 	})
 
-	log.Println("ping", rdb.Ping(ctx))
+	log.Println("ping", rdb.Ping(ctx).Err)
 	log.Println("flush all data from redis.", rdb.FlushAll(ctx))
 
 	return &RedisDB{

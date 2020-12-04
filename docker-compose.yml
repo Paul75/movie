@@ -8,10 +8,13 @@ services:
       POSTGRES_PASSWORD: example
       POSTGRES_USER: laposte
       POSTGRES_DB: movie
-    ports:
-      - 5432:5432
+    network_mode: host
   
   redis:
     image: redis:6.0.9-alpine
-    ports: 
-      - 6379:6379
+    network_mode: host
+
+  api:
+    image: movie-api:v0.0.2
+    command: ["sh", "-c", "sleep 10 && ./api_movie"]
+    network_mode: host
