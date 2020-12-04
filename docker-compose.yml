@@ -6,7 +6,7 @@ services:
     restart: always
     environment: 
       POSTGRES_PASSWORD: example
-      POSTGRES_USER: lapost
+      POSTGRES_USER: laposte
       POSTGRES_DB: movie
     ports:
       - 5432:5432
