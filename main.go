@@ -7,6 +7,7 @@ import (
 	"movie/cache/redis"
 	"movie/db"
 	"movie/db/moke"
+	"movie/db/mysql"
 	"movie/db/postgres"
 	"movie/db/sqlite"
 	"movie/middleware"
@@ -17,6 +18,7 @@ type Config struct {
 	Env          string
 	MySigningKey string
 	PostgresDNS  string
+	MysqlDNS     string
 	Redis        struct {
 		DNS string
 		Exp int
@@ -39,6 +41,7 @@ func init() {
 	conf.Redis.DNS = viper.GetString("redis.dns")
 	conf.Redis.Exp = viper.GetInt("redis.exp")
 	conf.PostgresDNS = viper.GetString("postgresDNS")
+	conf.MysqlDNS = viper.GetString("mysqlDNS")
 }
 
 func main() {
@@ -52,6 +55,8 @@ func main() {
 		db = sqlite.New()
 	case "pord":
 		db = postgres.New(conf.PostgresDNS)
+	case "mysql":
+		db = mysql.New(conf.MysqlDNS)
 	default:
 		db = moke.NewMokeDB()
 
