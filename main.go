@@ -5,12 +5,15 @@ import (
 	"github.com/spf13/viper"
 
 	"movie/cache/redis"
+	"movie/db"
 	"movie/db/moke"
+	"movie/db/sqlite"
 	"movie/middleware"
 	"movie/service"
 )
 
 type Config struct {
+	Env          string
 	MySigningKey string
 	PostgresDNS  string
 	Redis        struct {
@@ -29,6 +32,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	conf.Env = viper.GetString("env")
 	viper.SetDefault("MySigningKey", "AFnakljdfhskjhdfsffk")
 	conf.MySigningKey = viper.GetString("MySigningKey")
 	conf.Redis.DNS = viper.GetString("redis.dns")
@@ -40,7 +44,12 @@ func main() {
 	// concurrency.Service()
 	middleware.MySigningKey = []byte(conf.MySigningKey)
 	r := gin.Default()
-	db := moke.NewMokeDB()
+	var db db.DB
+	if conf.Env == "local" {
+		db = sqlite.New()
+	} else {
+		db = moke.NewMokeDB()
+	}
 	//db := sqlite.New()
 	redisDB := redis.NewRedisDB(conf.Redis.DNS, conf.Redis.Exp)
 	service.InitRoutes(r, db, redisDB)

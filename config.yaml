@@ -1,3 +1,4 @@
+env: local
 MySigningKey: "ASKDFJNTvjsnvsnsls"
 redis:
   dns: "redis:6379"

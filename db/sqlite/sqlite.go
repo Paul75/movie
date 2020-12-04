@@ -1,6 +1,9 @@
 package sqlite
 
 import (
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+
 	"movie/db"
 	"movie/model"
 )
@@ -8,32 +11,49 @@ import (
 var _ db.DB = &DBSQLite{}
 
 type DBSQLite struct {
+	db *gorm.DB
 }
 
 func New() db.DB {
-	return &DBSQLite{}
+	db, err := gorm.Open(sqlite.Open("local.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	}
+	db.AutoMigrate(&model.User{})
+
+	return &DBSQLite{db}
 }
 
 // Users
-func (DBSQLite) AddUser(u *model.User) (*model.User, error) {
-	return nil, nil
+func (sqldb *DBSQLite) AddUser(u *model.User) (*model.User, error) {
+	return u, sqldb.db.Create(u).Error
 }
-func (DBSQLite) DeleteUser(uuid string) error {
-	return nil
+func (sqldb *DBSQLite) DeleteUser(uuid string) error {
+	return sqldb.db.Where("id = ?", uuid).Delete(&model.User{}).Error
 }
-func (DBSQLite) GetUsers() (map[string]*model.User, error) {
-	return nil, nil
+func (sqldb *DBSQLite) GetUsers() (map[string]*model.User, error) {
+	var users []model.User
+	sqldb.db.Find(&users)
+	finalres := make(map[string]*model.User)
+	for _, u := range users {
+		finalres[u.ID] = &u
+	}
+	return finalres, nil
 }
-func (DBSQLite) GetUserByUUID(uuid string) (*model.User, error) {
-	return nil, nil
+func (sqldb *DBSQLite) GetUserByUUID(uuid string) (*model.User, error) {
+	var u model.User
+	return &u, sqldb.db.Model(&u).Where("id = ?", uuid).First(&u).Error
 }
 
-func (DBSQLite) UpdateUser(uuid string, data map[string]interface{}) (*model.User, error) {
-	return nil, nil
+func (sqldb *DBSQLite) UpdateUser(uuid string, data map[string]interface{}) (*model.User, error) {
+	var user model.User
+
+	return &user, sqldb.db.Model(&user).Where("id = ?", uuid).Updates(data).Error
 }
 
-func (DBSQLite) GetUserByEmail(email string) (*model.User, error) {
-	return nil, nil
+func (sqldb *DBSQLite) GetUserByEmail(email string) (*model.User, error) {
+	var user model.User
+	return &user, sqldb.db.Where("email = ?", email).First(&user).Error
 }
 
 func (DBSQLite) AddMedia(u *model.Media) (*model.Media, error) {

@@ -10,11 +10,11 @@ import (
 
 // User represent the customer.
 type User struct {
-	ID        string `json:"id"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
+	ID        string `json:"id" gorm:"primaryKey" db:"id"`
+	FirstName string `json:"first_name" db:"first_name"`
+	LastName  string `json:"last_name" db:"last_name"`
+	Email     string `json:"email" db:"email"`
+	Password  string `json:"password" db:"password"`
 }
 
 func NewUser(fn, ln, email, pwd string) *User {
