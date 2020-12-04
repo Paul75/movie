@@ -9,7 +9,9 @@ require (
 	github.com/go-redis/redis/v8 v8.4.0
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/google/uuid v1.1.2
+	github.com/jmoiron/sqlx v1.2.0
 	github.com/json-iterator/go v1.1.10 // indirect
+	github.com/lib/pq v1.0.0
 	github.com/spf13/viper v1.7.1
 	github.com/ugorji/go v1.2.0 // indirect
 	golang.org/x/crypto v0.0.0-20201124201722-c8d3bf9c5392 // indirect

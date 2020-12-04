@@ -7,6 +7,7 @@ import (
 	"movie/cache/redis"
 	"movie/db"
 	"movie/db/moke"
+	"movie/db/postgres"
 	"movie/db/sqlite"
 	"movie/middleware"
 	"movie/service"
@@ -37,6 +38,7 @@ func init() {
 	conf.MySigningKey = viper.GetString("MySigningKey")
 	conf.Redis.DNS = viper.GetString("redis.dns")
 	conf.Redis.Exp = viper.GetInt("redis.exp")
+	conf.PostgresDNS = viper.GetString("postgresDNS")
 }
 
 func main() {
@@ -45,10 +47,14 @@ func main() {
 	middleware.MySigningKey = []byte(conf.MySigningKey)
 	r := gin.Default()
 	var db db.DB
-	if conf.Env == "local" {
+	switch conf.Env {
+	case "local":
 		db = sqlite.New()
-	} else {
+	case "pord":
+		db = postgres.New(conf.PostgresDNS)
+	default:
 		db = moke.NewMokeDB()
+
 	}
 	//db := sqlite.New()
 	redisDB := redis.NewRedisDB(conf.Redis.DNS, conf.Redis.Exp)

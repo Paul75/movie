@@ -1,5 +1,6 @@
-env: local
+env: pord
 MySigningKey: "ASKDFJNTvjsnvsnsls"
 redis:
   dns: "redis:6379"
   exp: 200
+postgresDNS: "host=db user=laposte dbname=movie password=example sslmode=disable port=5432 TimeZone=Europe/Paris"
