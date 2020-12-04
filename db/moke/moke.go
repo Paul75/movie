@@ -7,6 +7,8 @@ import (
 	"movie/model"
 )
 
+var _ db.DB = &MokeDB{}
+
 type MokeDB struct {
 	Users  map[string]*model.User
 	Movies map[string]*model.Movie

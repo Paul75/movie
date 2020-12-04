@@ -5,7 +5,6 @@ import (
 	"github.com/spf13/viper"
 
 	"movie/cache/redis"
-	"movie/concurrency"
 	"movie/db/moke"
 	"movie/middleware"
 	"movie/service"
@@ -38,7 +37,7 @@ func init() {
 
 func main() {
 
-	concurrency.Service()
+	// concurrency.Service()
 	middleware.MySigningKey = []byte(conf.MySigningKey)
 	r := gin.Default()
 	db := moke.NewMokeDB()

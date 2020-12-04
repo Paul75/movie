@@ -5,6 +5,8 @@ import (
 	"movie/model"
 )
 
+var _ db.DB = &DBSQLite{}
+
 type DBSQLite struct {
 }
 
@@ -27,6 +29,10 @@ func (DBSQLite) GetUserByUUID(uuid string) (*model.User, error) {
 }
 
 func (DBSQLite) UpdateUser(uuid string, data map[string]interface{}) (*model.User, error) {
+	return nil, nil
+}
+
+func (DBSQLite) GetUserByEmail(email string) (*model.User, error) {
 	return nil, nil
 }
 
@@ -66,5 +72,16 @@ func (DBSQLite) AddMovie(u *model.Movie) (*model.Movie, error) {
 	return nil, nil
 }
 func (DBSQLite) GetMovies() (map[string]*model.Movie, error) {
+	return nil, nil
+}
+func (DBSQLite) DeleteMovie(uuid string) error {
+	return nil
+}
+
+func (DBSQLite) GetMovieByUUID(uuid string) (*model.Movie, error) {
+	return nil, nil
+}
+
+func (DBSQLite) UpdateMovie(uuid string, data map[string]interface{}) (*model.Movie, error) {
 	return nil, nil
 }
